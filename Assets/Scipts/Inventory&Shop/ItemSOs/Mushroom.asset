@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe26b41df79b24e4e9683579594091f3, type: 3}
+  m_Name: Mushroom
+  m_EditorClassIdentifier: 
+  itemName: Mushroom
+  itemDescription: FunGUS?
+  icon: {fileID: -5225540622116197949, guid: 86e50bc1c5a7e41469955089b2240d92, type: 3}
+  isGold: 0
+  currentHealth: 5
+  maxHealth: 0
+  speed: 0
+  damage: 0
+  duration: 0
