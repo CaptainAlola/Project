@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      toxic_icon128_0: 6920829028273540874
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

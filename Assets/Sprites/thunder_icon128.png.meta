@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      thunder_icon128_0: 456767350700619442
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
