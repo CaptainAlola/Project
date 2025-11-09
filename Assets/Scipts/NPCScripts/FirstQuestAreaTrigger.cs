@@ -1,109 +1,176 @@
 using UnityEngine;
+using UnityEngine.UI;     // << важно
+using System.Collections;
 
 public class QuestAreaTrigger : MonoBehaviour
 {
-    public GameObject questText; // Ссылка на объект текста
-    public GameObject quest1;    // Ссылка на объект Quest1
-    public GameObject quest2;    // Ссылка на объект Quest2
-    public GameObject quest2_2;  // Ссылка на объект Quest2.2
-    public GameObject quest3;    // Ссылка на объект Quest3
-    public GameObject quest3_3;  // Ссылка на объект Quest3.3
-    public string areaTag = "Second_Quest_Area"; // Тег для Second_Quest_Area
+    [Header("UI")]
+    public GameObject interactPrompt;
+    public KeyCode interactKey = KeyCode.F;
 
-    private bool mushroomsCleared = false; // Флаг, показывающий, уничтожены ли все Mushroom
+    [Header("Quest окна (диалоги)")]
+    public GameObject quest1;
+    public GameObject quest2;
+    public GameObject quest2_2;
+    public GameObject quest3;
+    public GameObject quest3_3;
+
+    public string areaTag = "Second_Quest_Area";
+
+    private bool mushroomsCleared = false;
+    private bool isPlayerInside = false;
+    private bool dialogueOpen = false;
+    private GameObject currentWindow;   // активное окно, для отключения и отвязки
+
+    void Start()
+    {
+        if (interactPrompt != null) interactPrompt.SetActive(false);
+
+        // диалоговые окна по умолчанию скрыты
+        SetActiveSafe(quest1, false);
+        SetActiveSafe(quest2, false);
+        SetActiveSafe(quest2_2, false);
+        SetActiveSafe(quest3, false);
+        SetActiveSafe(quest3_3, false);
+
+        // базовые проверки на EventSystem/GraphicRaycaster
+        EnsureUIPrereqs();
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player")) // Проверяем, что вошел игрок
-        {
-            if (questText != null)
-            {
-                questText.SetActive(true); // Показываем текст
-            }
+        if (!collision.CompareTag("Player")) return;
+        isPlayerInside = true;
 
-            // Проверяем, что игрок вошел в Second_Quest_Area и все Mushroom уничтожены
-            if (gameObject.CompareTag(areaTag) && mushroomsCleared)
-            {
-                if (quest2_2 != null && !quest2_2.activeSelf)
-                {
-                    quest2_2.SetActive(true); // Активируем Quest2.2
-                    StartCoroutine(DestroyQuest2_2AfterDelay()); // Запускаем корутину для уничтожения
-                }
-            }
-        }
+        if (!dialogueOpen && interactPrompt != null)
+            interactPrompt.SetActive(true);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player")) // Проверяем, что игрок вышел
-        {
-            if (questText != null)
-            {
-                questText.SetActive(false); // Скрываем текст
-            }
+        if (!collision.CompareTag("Player")) return;
+        isPlayerInside = false;
 
-            if (quest1 != null) // Уничтожаем Quest1 при выходе из зоны
-            {
-                Destroy(quest1);
-            }
-        }
+        if (interactPrompt != null) interactPrompt.SetActive(false);
+
+        // старое поведение: уничтожить quest1 при выходе
+        if (quest1 != null) Destroy(quest1);
     }
 
     private void Update()
     {
-        // Проверяем, остались ли объекты с тегом "Mushroom"
+        if (isPlayerInside && !dialogueOpen && Input.GetKeyDown(interactKey))
+        {
+            OpenDialogue();
+        }
+
         if (!mushroomsCleared && GameObject.FindGameObjectsWithTag("Mushroom").Length == 0)
         {
-            mushroomsCleared = true; // Устанавливаем флаг, что все Mushroom уничтожены
+            mushroomsCleared = true;
+            if (quest2 != null) Destroy(quest2);
+        }
+    }
 
-            if (quest2 != null)
+    private void OpenDialogue()
+    {
+        dialogueOpen = true;
+        if (interactPrompt != null) interactPrompt.SetActive(false);
+
+        // Включаем нужное окно для этой зоны (как у тебя задумано)
+        if (quest1 != null && !quest1.activeSelf) currentWindow = quest1;
+        else if (quest2 != null && !quest2.activeSelf) currentWindow = quest2;
+        else if (quest3 != null && !quest3.activeSelf) currentWindow = quest3;
+
+        SetActiveSafe(currentWindow, true);
+
+        // >>> Автовязка кнопок внутри выбранного окна
+        WireCloseButtons(currentWindow);
+
+        // Спец-логика Second_Quest_Area
+        if (gameObject.CompareTag(areaTag) && mushroomsCleared)
+        {
+            if (quest2_2 != null && !quest2_2.activeSelf)
             {
-                Destroy(quest2); // Уничтожаем Quest2
+                quest2_2.SetActive(true);
+                WireCloseButtons(quest2_2);
+                StartCoroutine(DestroyQuest2_2AfterDelay());
             }
         }
     }
 
-    private System.Collections.IEnumerator DestroyQuest2_2AfterDelay()
+    /// <summary>Вызывается кнопкой внутри окна, но мы ещё и автовешаем её сами.</summary>
+    public void CloseDialogue()
+    {
+        dialogueOpen = false;
+
+        // Выключаем текущее окно
+        if (currentWindow != null) currentWindow.SetActive(false);
+        currentWindow = null;
+
+        // На всякий случай выключим и остальные окна
+        SetActiveSafe(quest1, false);
+        SetActiveSafe(quest2, false);
+        SetActiveSafe(quest2_2, false);
+        SetActiveSafe(quest3, false);
+        SetActiveSafe(quest3_3, false);
+
+        // Если игрок ещё в зоне — снова показать подсказку F
+        if (isPlayerInside && interactPrompt != null)
+            interactPrompt.SetActive(true);
+    }
+
+    private IEnumerator DestroyQuest2_2AfterDelay()
     {
         yield return new WaitForSeconds(3f);
-        if (quest2_2 != null)
-        {
-            Destroy(quest2_2); // Уничтожаем Quest2.2
-        }
-
-        if (quest3 != null)
-        {
-            Destroy(quest3); // Уничтожаем Quest3
-        }
+        if (quest2_2 != null) Destroy(quest2_2);
+        if (quest3 != null) Destroy(quest3);
 
         if (quest3_3 != null && !quest3_3.activeSelf)
         {
-            quest3_3.SetActive(true); // Активируем Quest3.3
+            quest3_3.SetActive(true);
+            WireCloseButtons(quest3_3);
 
-            // Включаем скрипт Player_Bow на игроке
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            var player = GameObject.FindGameObjectWithTag("Player");
             if (player != null)
             {
-                Player_Bow playerBow = player.GetComponent<Player_Bow>();
-                if (playerBow != null)
-                {
-                    playerBow.enabled = true; // Включаем скрипт
-                    Debug.Log("Player_Bow включен на игроке");
-                }
-                else
-                {
-                    Debug.LogWarning("Player_Bow не найден на объекте Player");
-                }
-            }
-            else
-            {
-                Debug.LogWarning("Игрок с тегом Player не найден");
+                var bow = player.GetComponent<Player_Bow>();
+                if (bow != null) bow.enabled = true;
             }
 
-            // Ждем 3 секунды перед уничтожением Quest3.3
             yield return new WaitForSeconds(3f);
-            Destroy(quest3_3); // Уничтожаем Quest3.3
-            Debug.Log("Quest3.3 уничтожен");
+            Destroy(quest3_3);
         }
+    }
+
+    // --------- ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ ----------
+
+    private void WireCloseButtons(GameObject windowRoot)
+    {
+        if (windowRoot == null) return;
+
+        // найдём ВСЕ Button внутри, даже если часть была неактивна при старте
+        var buttons = windowRoot.GetComponentsInChildren<Button>(true);
+        foreach (var btn in buttons)
+        {
+            // чистим старые слушатели, чтобы не набивать дубликаты
+            btn.onClick.RemoveAllListeners();
+            // фикс захвата переменной в лямбде не нужен — у всех кнопок действие одно:
+            btn.onClick.AddListener(CloseDialogue);
+        }
+    }
+
+    private void SetActiveSafe(GameObject go, bool state)
+    {
+        if (go != null) go.SetActive(state);
+    }
+
+    private void EnsureUIPrereqs()
+    {
+        // EventSystem должен быть в сцене
+        if (FindObjectOfType<UnityEngine.EventSystems.EventSystem>() == null)
+            Debug.LogWarning("В сцене нет EventSystem — кнопки не будут получать клики.");
+
+        // У корня Canvas, где лежат окна диалогов, должен быть GraphicRaycaster.
+        // Если клики не проходят — проверьте, нет ли поверх фуллскрин-изображений с Raycast Target.
     }
 }

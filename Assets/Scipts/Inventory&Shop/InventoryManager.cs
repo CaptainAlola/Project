@@ -27,7 +27,7 @@ public class InventoryManager : MonoBehaviour
         }
         else 
         {
-            UpdateUI();
+         //   UpdateUI();
         }
     }
 
