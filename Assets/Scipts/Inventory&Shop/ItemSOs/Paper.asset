@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe26b41df79b24e4e9683579594091f3, type: 3}
+  m_Name: Paper
+  m_EditorClassIdentifier: 
+  itemName: Paper
+  itemDescription: Story paper
+  icon: {fileID: -7310333596434286844, guid: 9e62037a5788339469c2414afc0a2508, type: 3}
+  isGold: 0
+  currentHealth: 5
+  maxHealth: 0
+  speed: 0
+  damage: 0
+  duration: 0

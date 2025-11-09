@@ -7,6 +7,7 @@ TagManager:
   - Mushroom
   - Second_Quest_Area
   - Third_Quest_Area
+  - Paper
   layers:
   - Default
   - TransparentFX
