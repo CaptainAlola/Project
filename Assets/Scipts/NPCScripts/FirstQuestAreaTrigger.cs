@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;     // << важно
+using UnityEngine.UI;
 using System.Collections;
 
 public class QuestAreaTrigger : MonoBehaviour
@@ -20,20 +20,18 @@ public class QuestAreaTrigger : MonoBehaviour
     private bool mushroomsCleared = false;
     private bool isPlayerInside = false;
     private bool dialogueOpen = false;
-    private GameObject currentWindow;   // активное окно, для отключения и отвязки
+    private GameObject currentWindow;
 
     void Start()
     {
         if (interactPrompt != null) interactPrompt.SetActive(false);
 
-        // диалоговые окна по умолчанию скрыты
         SetActiveSafe(quest1, false);
         SetActiveSafe(quest2, false);
         SetActiveSafe(quest2_2, false);
         SetActiveSafe(quest3, false);
         SetActiveSafe(quest3_3, false);
 
-        // базовые проверки на EventSystem/GraphicRaycaster
         EnsureUIPrereqs();
     }
 
@@ -53,7 +51,6 @@ public class QuestAreaTrigger : MonoBehaviour
 
         if (interactPrompt != null) interactPrompt.SetActive(false);
 
-        // старое поведение: уничтожить quest1 при выходе
         if (quest1 != null) Destroy(quest1);
     }
 
@@ -76,19 +73,20 @@ public class QuestAreaTrigger : MonoBehaviour
         dialogueOpen = true;
         if (interactPrompt != null) interactPrompt.SetActive(false);
 
-        // Включаем нужное окно для этой зоны (как у тебя задумано)
         if (quest1 != null && !quest1.activeSelf) currentWindow = quest1;
         else if (quest2 != null && !quest2.activeSelf) currentWindow = quest2;
         else if (quest3 != null && !quest3.activeSelf) currentWindow = quest3;
 
         SetActiveSafe(currentWindow, true);
-
-        // >>> Автовязка кнопок внутри выбранного окна
         WireCloseButtons(currentWindow);
 
-        // Спец-логика Second_Quest_Area
+        // Если это Second_Quest_Area и все грибы собраны — удаляем их из инвентаря
         if (gameObject.CompareTag(areaTag) && mushroomsCleared)
         {
+            var inv = Object.FindFirstObjectByType<InventoryManager>();
+            if (inv != null)
+                inv.RemoveAllMushrooms();
+
             if (quest2_2 != null && !quest2_2.activeSelf)
             {
                 quest2_2.SetActive(true);
@@ -98,23 +96,19 @@ public class QuestAreaTrigger : MonoBehaviour
         }
     }
 
-    /// <summary>Вызывается кнопкой внутри окна, но мы ещё и автовешаем её сами.</summary>
     public void CloseDialogue()
     {
         dialogueOpen = false;
 
-        // Выключаем текущее окно
         if (currentWindow != null) currentWindow.SetActive(false);
         currentWindow = null;
 
-        // На всякий случай выключим и остальные окна
         SetActiveSafe(quest1, false);
         SetActiveSafe(quest2, false);
         SetActiveSafe(quest2_2, false);
         SetActiveSafe(quest3, false);
         SetActiveSafe(quest3_3, false);
 
-        // Если игрок ещё в зоне — снова показать подсказку F
         if (isPlayerInside && interactPrompt != null)
             interactPrompt.SetActive(true);
     }
@@ -142,19 +136,14 @@ public class QuestAreaTrigger : MonoBehaviour
         }
     }
 
-    // --------- ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ ----------
-
     private void WireCloseButtons(GameObject windowRoot)
     {
         if (windowRoot == null) return;
 
-        // найдём ВСЕ Button внутри, даже если часть была неактивна при старте
         var buttons = windowRoot.GetComponentsInChildren<Button>(true);
         foreach (var btn in buttons)
         {
-            // чистим старые слушатели, чтобы не набивать дубликаты
             btn.onClick.RemoveAllListeners();
-            // фикс захвата переменной в лямбде не нужен — у всех кнопок действие одно:
             btn.onClick.AddListener(CloseDialogue);
         }
     }
@@ -166,11 +155,7 @@ public class QuestAreaTrigger : MonoBehaviour
 
     private void EnsureUIPrereqs()
     {
-        // EventSystem должен быть в сцене
-        if (FindObjectOfType<UnityEngine.EventSystems.EventSystem>() == null)
+        if (Object.FindFirstObjectByType<UnityEngine.EventSystems.EventSystem>() == null)
             Debug.LogWarning("В сцене нет EventSystem — кнопки не будут получать клики.");
-
-        // У корня Canvas, где лежат окна диалогов, должен быть GraphicRaycaster.
-        // Если клики не проходят — проверьте, нет ли поверх фуллскрин-изображений с Raycast Target.
     }
 }
