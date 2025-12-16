@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private CanvasGroup statsMenu;
     [SerializeField] private CanvasGroup skillsMenu;
     [SerializeField] private CanvasGroup questsMenu;
+    [SerializeField] private CanvasGroup notesMenu;
 
     [SerializeField] private Image menuToggleImage;
     [SerializeField] private Sprite openSprite;
@@ -19,6 +20,7 @@ public class UIManager : MonoBehaviour
         SetMenuState(statsMenu, false);
         SetMenuState(skillsMenu, false);
         SetMenuState(questsMenu, false);
+        SetMenuState(notesMenu, false);
 
         SetMenuState(target, true);
     }
@@ -32,6 +34,7 @@ public class UIManager : MonoBehaviour
         SetMenuState(statsMenu, false);
         SetMenuState(skillsMenu, false);
         SetMenuState(questsMenu, false);
+        SetMenuState(notesMenu, false);
     }
 
     private void SetMenuState(CanvasGroup group, bool isActive)
