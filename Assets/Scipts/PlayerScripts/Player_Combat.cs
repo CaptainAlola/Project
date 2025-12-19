@@ -39,7 +39,7 @@ public class Player_Combat : MonoBehaviour
 
         Collider2D[] enemies = Physics2D.OverlapCircleAll(attackPoint.position, StatsManager.Instance.weaponRange, enemyLayer);
 
-        if (enemies[0].isTrigger)
+        if (enemies != null && enemies.Length > 0 && enemies[0].isTrigger)
         {
             return;
         }

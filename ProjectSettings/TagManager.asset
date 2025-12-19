@@ -8,6 +8,9 @@ TagManager:
   - Second_Quest_Area
   - Third_Quest_Area
   - Paper
+  - Mushroom_brown
+  - branch
+  - Fourth_Quest_Area
   layers:
   - Default
   - TransparentFX
