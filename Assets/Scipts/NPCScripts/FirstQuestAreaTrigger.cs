@@ -14,17 +14,10 @@ public class QuestAreaTrigger : MonoBehaviour
     public GameObject quest2_2;
     public GameObject quest3;
     public GameObject quest3_3;
-    public GameObject quest_second_area_1;
-    public GameObject quest_second_area_1_2;
-    public GameObject tree_second_area_1_2;
 
     public string areaTag = "Second_Quest_Area";
-    public string SecondAreaTag = "Fourth_Quest_Area";
 
     private bool mushroomsCleared = false;
-    private bool mushroomsBrownCleared = false;
-    private bool branchesCleared = false;
-
     private bool isPlayerInside = false;
     private bool dialogueOpen = false;
     private GameObject currentWindow;
@@ -38,8 +31,6 @@ public class QuestAreaTrigger : MonoBehaviour
         SetActiveSafe(quest2_2, false);
         SetActiveSafe(quest3, false);
         SetActiveSafe(quest3_3, false);
-        SetActiveSafe(quest_second_area_1, false);
-        SetActiveSafe(quest_second_area_1_2, false);
 
         EnsureUIPrereqs();
     }
@@ -75,13 +66,6 @@ public class QuestAreaTrigger : MonoBehaviour
             mushroomsCleared = true;
             if (quest2 != null) Destroy(quest2);
         }
-
-        if (!mushroomsBrownCleared && !branchesCleared && GameObject.FindGameObjectsWithTag("Mushroom_brown").Length == 0 && GameObject.FindGameObjectsWithTag("branch").Length == 0)
-        {
-            mushroomsBrownCleared = true;
-            branchesCleared = true;
-            if (quest_second_area_1 != null) Destroy(quest_second_area_1);
-        }
     }
 
     private void OpenDialogue()
@@ -92,7 +76,6 @@ public class QuestAreaTrigger : MonoBehaviour
         if (quest1 != null && !quest1.activeSelf) currentWindow = quest1;
         else if (quest2 != null && !quest2.activeSelf) currentWindow = quest2;
         else if (quest3 != null && !quest3.activeSelf) currentWindow = quest3;
-        else if (quest_second_area_1 != null && !quest_second_area_1.activeSelf) currentWindow = quest_second_area_1;
 
         SetActiveSafe(currentWindow, true);
         WireCloseButtons(currentWindow);
@@ -111,23 +94,6 @@ public class QuestAreaTrigger : MonoBehaviour
                 StartCoroutine(DestroyQuest2_2AfterDelay());
             }
         }
-
-        if (gameObject.CompareTag(SecondAreaTag) && mushroomsBrownCleared && branchesCleared)
-        {
-            var inv = Object.FindFirstObjectByType<InventoryManager>();
-            if (inv != null)
-            {
-                inv.RemoveAllMushroomsBrown();
-                inv.RemoveAllBranches();
-            }
-
-            if (quest_second_area_1_2 != null && !quest_second_area_1_2.activeSelf)
-            {
-                quest_second_area_1_2.SetActive(true);
-                WireCloseButtons(quest_second_area_1_2);
-                StartCoroutine(DestroyTree_AfterCompleteQuest());
-            }
-        }
     }
 
     public void CloseDialogue()
@@ -142,9 +108,6 @@ public class QuestAreaTrigger : MonoBehaviour
         SetActiveSafe(quest2_2, false);
         SetActiveSafe(quest3, false);
         SetActiveSafe(quest3_3, false);
-        SetActiveSafe(quest_second_area_1, false);
-        SetActiveSafe(quest_second_area_1_2, false);
-
 
         if (isPlayerInside && interactPrompt != null)
             interactPrompt.SetActive(true);
@@ -170,28 +133,6 @@ public class QuestAreaTrigger : MonoBehaviour
 
             yield return new WaitForSeconds(3f);
             Destroy(quest3_3);
-        }
-    }
-
-    private IEnumerator DestroyTree_AfterCompleteQuest()
-    {
-        yield return new WaitForSeconds(2f);
-        if (quest_second_area_1_2 != null) Destroy(quest_second_area_1_2);
-
-        if (tree_second_area_1_2 != null)
-        {
-            var sprite = tree_second_area_1_2.GetComponent<SpriteRenderer>();
-            var color = sprite.color;
-            int steps = 10;
-            float delay = 0.2f;
-            for (int i = 0; i < steps; i++)
-            {
-                color.a = 1f-(i+1)/(float)steps;
-                sprite.color = color;
-                yield return new WaitForSeconds(delay);
-            }
-
-            Destroy(tree_second_area_1_2);
         }
     }
 

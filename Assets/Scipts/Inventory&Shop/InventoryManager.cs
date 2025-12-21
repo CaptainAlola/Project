@@ -93,31 +93,5 @@ public class InventoryManager : MonoBehaviour
             }
         }
     }
-
-    public void RemoveAllMushroomsBrown()
-    {
-        foreach (var slot in itemSlots)
-        {
-            if (slot.itemSO != null && slot.itemSO.itemName == "Mushroom_brown")
-            {
-                slot.itemSO = null;
-                slot.quantity = 0;
-                slot.UpdateUI();
-            }
-        }
-    }
-
-    public void RemoveAllBranches()
-    {
-        foreach (var slot in itemSlots)
-        {
-            if (slot.itemSO != null && slot.itemSO.itemName == "branch")
-            {
-                slot.itemSO = null;
-                slot.quantity = 0;
-                slot.UpdateUI();
-            }
-        }
-    }
 }
 
