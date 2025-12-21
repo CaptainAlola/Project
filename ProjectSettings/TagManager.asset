@@ -8,6 +8,7 @@ TagManager:
   - Second_Quest_Area
   - Third_Quest_Area
   - Paper
+  - Golem
   layers:
   - Default
   - TransparentFX
