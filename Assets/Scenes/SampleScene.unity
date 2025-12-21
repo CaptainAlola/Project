@@ -5031,7 +5031,7 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0.03, y: 0.02}
-  m_Size: {x: 0.5, y: 0.48}
+  m_Size: {x: 0.74, y: 0.48}
   m_Direction: 0
 --- !u!50 &247486914
 Rigidbody2D:
@@ -5902,7 +5902,7 @@ Transform:
   m_GameObject: {fileID: 275548928}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.19, y: 31.33, z: 0}
+  m_LocalPosition: {x: 1.55, y: 2.06, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -14890,7 +14890,7 @@ Tilemap:
       - {fileID: 315846383, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: -1677229268, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: 431802628, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
-      m_AnimationSpeed: 5
+      m_AnimationSpeed: 5.0000005
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: 9, y: -27, z: 0}
@@ -15130,7 +15130,7 @@ Tilemap:
       - {fileID: -163366643, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: 1282557535, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: 204761154, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
-      m_AnimationSpeed: 5
+      m_AnimationSpeed: 5.0000005
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: 6, y: -21, z: 0}
@@ -15625,7 +15625,7 @@ Tilemap:
       - {fileID: -1094575449, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: 2039254330, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: -1900884159, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
-      m_AnimationSpeed: 5.0000005
+      m_AnimationSpeed: 5
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: 21, y: -8, z: 0}
@@ -16030,7 +16030,7 @@ Tilemap:
       - {fileID: 315846383, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: -1677229268, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: 431802628, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
-      m_AnimationSpeed: 5
+      m_AnimationSpeed: 5.0000005
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: -24, y: 7, z: 0}
@@ -16105,7 +16105,7 @@ Tilemap:
       - {fileID: -1094575449, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: 2039254330, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: -1900884159, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
-      m_AnimationSpeed: 5.0000005
+      m_AnimationSpeed: 5
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: 25, y: 9, z: 0}
@@ -16315,7 +16315,7 @@ Tilemap:
       - {fileID: -1094575449, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: 2039254330, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: -1900884159, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
-      m_AnimationSpeed: 5.0000005
+      m_AnimationSpeed: 5
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: -21, y: 13, z: 0}
@@ -17197,7 +17197,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -11.261492, y: 30.838785, z: -10.032792}
+  m_LocalPosition: {x: 1.4785078, y: 1.568785, z: -10.032792}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -54621,7 +54621,7 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0.03, y: 0.02}
-  m_Size: {x: 0.5, y: 0.48}
+  m_Size: {x: 0.74, y: 0.48}
   m_Direction: 0
 --- !u!50 &1259401621
 Rigidbody2D:
@@ -61271,7 +61271,7 @@ Transform:
   m_GameObject: {fileID: 1567630426}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -11.261492, y: 30.838785, z: -10.032792}
+  m_LocalPosition: {x: 1.4785078, y: 1.568785, z: -10.032792}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -61988,7 +61988,7 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0.03, y: 0.02}
-  m_Size: {x: 0.5, y: 0.48}
+  m_Size: {x: 0.74, y: 0.48}
   m_Direction: 0
 --- !u!50 &1597066137
 Rigidbody2D:
@@ -63211,7 +63211,7 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0.03, y: 0.02}
-  m_Size: {x: 0.5, y: 0.48}
+  m_Size: {x: 0.74, y: 0.48}
   m_Direction: 0
 --- !u!50 &1679325925
 Rigidbody2D:
@@ -71479,7 +71479,7 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0.03, y: 0.02}
-  m_Size: {x: 0.5, y: 0.48}
+  m_Size: {x: 0.74, y: 0.48}
   m_Direction: 0
 --- !u!50 &2005090364
 Rigidbody2D:
