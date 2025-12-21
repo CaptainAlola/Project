@@ -3,12 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags:
-  - Mushroom
-  - Second_Quest_Area
-  - Third_Quest_Area
-  - Paper
-  - Golem
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -16,10 +11,10 @@ TagManager:
   - 
   - Water
   - UI
-  - Player
-  - Enemy
-  - Obstacle
-  - Mushroom
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 
