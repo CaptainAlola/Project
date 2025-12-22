@@ -294,6 +294,7 @@ public class QuestAreaTrigger : MonoBehaviour
             }
 
             Destroy(tree_second_area_1_2);
+            gameObject.SetActive(false);
         }
     }
 
