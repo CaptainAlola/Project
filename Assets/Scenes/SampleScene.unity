@@ -16410,7 +16410,7 @@ Tilemap:
       - {fileID: -4884028467403954897, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: -1302951679, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: -525588384, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
-      m_AnimationSpeed: 5.0000005
+      m_AnimationSpeed: 5
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: -3, y: -24, z: 0}
@@ -16665,7 +16665,7 @@ Tilemap:
       - {fileID: -163366643, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: 1282557535, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: 204761154, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
-      m_AnimationSpeed: 5
+      m_AnimationSpeed: 5.0000005
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: 6, y: -20, z: 0}
@@ -16695,7 +16695,7 @@ Tilemap:
       - {fileID: 315846383, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: -1677229268, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: 431802628, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
-      m_AnimationSpeed: 5
+      m_AnimationSpeed: 5.0000005
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: 2, y: -19, z: 0}
@@ -16740,7 +16740,7 @@ Tilemap:
       - {fileID: -1094575449, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: 2039254330, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: -1900884159, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
-      m_AnimationSpeed: 5.0000005
+      m_AnimationSpeed: 5
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: -29, y: -18, z: 0}
@@ -17205,7 +17205,7 @@ Tilemap:
       - {fileID: 315846383, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: -1677229268, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: 431802628, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
-      m_AnimationSpeed: 5
+      m_AnimationSpeed: 5.0000005
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: 14, y: -2, z: 0}
@@ -17280,7 +17280,7 @@ Tilemap:
       - {fileID: -4884028467403954897, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: -1302951679, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
       - {fileID: -525588384, guid: 9b69fdd5e06c089408f06b66f3abb9ea, type: 3}
-      m_AnimationSpeed: 5.0000005
+      m_AnimationSpeed: 5
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: 15, y: -1, z: 0}
@@ -62412,7 +62412,7 @@ MonoBehaviour:
   tree_second_area_1_2: {fileID: 1941149965}
   blacksmithAreaTag: Fifth_Quest_Area
   oreItemName: IronOre
-  oreNeed: 1
+  oreNeed: 8
   quest_second_area_2: {fileID: 294391468}
   quest_second_area_2_2: {fileID: 896140420}
   blacksmithObject: {fileID: 74684761}
