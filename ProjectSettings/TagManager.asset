@@ -11,6 +11,10 @@ TagManager:
   - Mushroom_brown
   - branch
   - Fourth_Quest_Area
+  - Fifth_Quest_Area
+  - Ore
+  - Golem
+  - Iron
   layers:
   - Default
   - TransparentFX

@@ -119,5 +119,42 @@ public class InventoryManager : MonoBehaviour
             }
         }
     }
+    public int CountItemByName(string itemName)
+    {
+        int total = 0;
+        foreach (var slot in itemSlots)
+        {
+            if (slot.itemSO != null && slot.itemSO.itemName == itemName)
+                total += slot.quantity;
+        }
+        return total;
+    }
+
+    // Удаляет ровно amount предметов с данным itemName (раскидывая по слотам)
+    public bool RemoveItemByName(string itemName, int amount)
+    {
+        int have = CountItemByName(itemName);
+        if (have < amount) return false;
+
+        int left = amount;
+
+        foreach (var slot in itemSlots)
+        {
+            if (left <= 0) break;
+            if (slot.itemSO == null) continue;
+            if (slot.itemSO.itemName != itemName) continue;
+
+            int take = Mathf.Min(slot.quantity, left);
+            slot.quantity -= take;
+            left -= take;
+
+            if (slot.quantity <= 0)
+                slot.itemSO = null;
+
+            slot.UpdateUI();
+        }
+
+        return true;
+    }
 }
 

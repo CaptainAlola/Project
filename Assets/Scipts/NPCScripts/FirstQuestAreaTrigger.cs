@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
 
 public class QuestAreaTrigger : MonoBehaviour
 {
@@ -14,9 +16,22 @@ public class QuestAreaTrigger : MonoBehaviour
     public GameObject quest2_2;
     public GameObject quest3;
     public GameObject quest3_3;
+
     public GameObject quest_second_area_1;
     public GameObject quest_second_area_1_2;
     public GameObject tree_second_area_1_2;
+
+    [Header("Квест кузнеца")]
+    public string blacksmithAreaTag = "Fifth_Quest_Area";
+    public string oreItemName = "IronOre"; // <-- ВАЖНО: поставь точное имя из ItemSO.itemName
+    public int oreNeed = 8;
+
+    public GameObject quest_second_area_2;     // начальный диалог
+    public GameObject quest_second_area_2_2;   // финальный диалог
+    public GameObject blacksmithObject;        // кузнец в сцене
+    public GameObject notePrefab;              // префаб записки
+
+    private bool blacksmithQuestCompleted = false;
 
     public string areaTag = "Second_Quest_Area";
     public string SecondAreaTag = "Fourth_Quest_Area";
@@ -24,6 +39,8 @@ public class QuestAreaTrigger : MonoBehaviour
     private bool mushroomsCleared = false;
     private bool mushroomsBrownCleared = false;
     private bool branchesCleared = false;
+
+ 
 
     private bool isPlayerInside = false;
     private bool dialogueOpen = false;
@@ -40,6 +57,10 @@ public class QuestAreaTrigger : MonoBehaviour
         SetActiveSafe(quest3_3, false);
         SetActiveSafe(quest_second_area_1, false);
         SetActiveSafe(quest_second_area_1_2, false);
+
+        // ? НОВОЕ
+        SetActiveSafe(quest_second_area_2, false);
+        SetActiveSafe(quest_second_area_2_2, false);
 
         EnsureUIPrereqs();
     }
@@ -76,7 +97,9 @@ public class QuestAreaTrigger : MonoBehaviour
             if (quest2 != null) Destroy(quest2);
         }
 
-        if (!mushroomsBrownCleared && !branchesCleared && GameObject.FindGameObjectsWithTag("Mushroom_brown").Length == 0 && GameObject.FindGameObjectsWithTag("branch").Length == 0)
+        if (!mushroomsBrownCleared && !branchesCleared
+            && GameObject.FindGameObjectsWithTag("Mushroom_brown").Length == 0
+            && GameObject.FindGameObjectsWithTag("branch").Length == 0)
         {
             mushroomsBrownCleared = true;
             branchesCleared = true;
@@ -89,15 +112,23 @@ public class QuestAreaTrigger : MonoBehaviour
         dialogueOpen = true;
         if (interactPrompt != null) interactPrompt.SetActive(false);
 
+        // Базовый выбор окна (как у тебя)
         if (quest1 != null && !quest1.activeSelf) currentWindow = quest1;
         else if (quest2 != null && !quest2.activeSelf) currentWindow = quest2;
         else if (quest3 != null && !quest3.activeSelf) currentWindow = quest3;
         else if (quest_second_area_1 != null && !quest_second_area_1.activeSelf) currentWindow = quest_second_area_1;
 
+        // ? НОВОЕ: если это зона кузнеца — используем его окна, а не общие
+        if (gameObject.CompareTag(blacksmithAreaTag))
+        {
+            HandleBlacksmithQuest();
+            return; // важно: чтобы не включалось старое окно ниже
+        }
+
         SetActiveSafe(currentWindow, true);
         WireCloseButtons(currentWindow);
 
-        // Если это Second_Quest_Area и все грибы собраны — удаляем их из инвентаря
+        // Твой квест с грибами (Second_Quest_Area)
         if (gameObject.CompareTag(areaTag) && mushroomsCleared)
         {
             var inv = Object.FindFirstObjectByType<InventoryManager>();
@@ -112,6 +143,7 @@ public class QuestAreaTrigger : MonoBehaviour
             }
         }
 
+        // Твой квест с деревом (Fourth_Quest_Area)
         if (gameObject.CompareTag(SecondAreaTag) && mushroomsBrownCleared && branchesCleared)
         {
             var inv = Object.FindFirstObjectByType<InventoryManager>();
@@ -130,6 +162,73 @@ public class QuestAreaTrigger : MonoBehaviour
         }
     }
 
+    // ==========================
+    // ? КВЕСТ КУЗНЕЦА
+    // ==========================
+    private void HandleBlacksmithQuest()
+    {
+        if (blacksmithQuestCompleted)
+        {
+            CloseDialogue();
+            return;
+        }
+
+        var inv = Object.FindFirstObjectByType<InventoryManager>();
+        if (inv == null)
+        {
+            // если инвентарь не найден — показываем стартовый диалог
+            quest_second_area_2.SetActive(true);
+            WireCloseButtons(quest_second_area_2);
+            return;
+        }
+
+        int oreCount = inv.CountItemByName(oreItemName);
+
+        if (oreCount < oreNeed)
+        {
+            quest_second_area_2.SetActive(true);
+            WireCloseButtons(quest_second_area_2);
+            return;
+        }
+
+        // хватает руды -> снимаем 8
+        bool removed = inv.RemoveItemByName(oreItemName, oreNeed);
+        if (!removed)
+        {
+            // на всякий случай
+            quest_second_area_2.SetActive(true);
+            WireCloseButtons(quest_second_area_2);
+            return;
+        }
+
+        // финальный диалог
+        quest_second_area_2_2.SetActive(true);
+        WireCloseButtons(quest_second_area_2_2);
+
+        blacksmithQuestCompleted = true;
+        StartCoroutine(CompleteBlacksmithQuestSequence());
+    }
+
+    private IEnumerator CompleteBlacksmithQuestSequence()
+    {
+        yield return new WaitForSeconds(2f);
+
+        // убираем кузнеца
+        Vector3 pos = blacksmithObject != null ? blacksmithObject.transform.position : transform.position;
+        if (blacksmithObject != null) Destroy(blacksmithObject);
+
+        // оставляем записку
+        if (notePrefab != null) Instantiate(notePrefab, pos, Quaternion.identity);
+
+        // можно уничтожить окна, как ты делал в других квестах
+        if (quest_second_area_2_2 != null) Destroy(quest_second_area_2_2);
+        if (quest_second_area_2_2 != null) Destroy(quest_second_area_2_2);
+
+        CloseDialogue();
+    }
+    // ==========================
+    // Твой существующий код
+    // ==========================
     public void CloseDialogue()
     {
         dialogueOpen = false;
@@ -145,6 +244,9 @@ public class QuestAreaTrigger : MonoBehaviour
         SetActiveSafe(quest_second_area_1, false);
         SetActiveSafe(quest_second_area_1_2, false);
 
+        // ? НОВОЕ
+        SetActiveSafe(quest_second_area_2, false);
+        SetActiveSafe(quest_second_area_2_2, false);
 
         if (isPlayerInside && interactPrompt != null)
             interactPrompt.SetActive(true);
@@ -186,7 +288,7 @@ public class QuestAreaTrigger : MonoBehaviour
             float delay = 0.2f;
             for (int i = 0; i < steps; i++)
             {
-                color.a = 1f-(i+1)/(float)steps;
+                color.a = 1f - (i + 1) / (float)steps;
                 sprite.color = color;
                 yield return new WaitForSeconds(delay);
             }
@@ -216,5 +318,124 @@ public class QuestAreaTrigger : MonoBehaviour
     {
         if (Object.FindFirstObjectByType<UnityEngine.EventSystems.EventSystem>() == null)
             Debug.LogWarning("В сцене нет EventSystem — кнопки не будут получать клики.");
+    }
+
+    // ==========================
+    // ? Универсальный подсчёт/удаление Ore из инвентаря
+    // ==========================
+
+    private int CountInventoryItemsWithTag(InventoryManager inv, string tag)
+    {
+        if (inv == null) return 0;
+
+        // 1) Попробуем найти поле items (List<GameObject> / List<Transform>)
+        var t = inv.GetType();
+        var itemsField = t.GetField("items", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        if (itemsField != null)
+        {
+            object val = itemsField.GetValue(inv);
+
+            if (val is IList list)
+            {
+                int c = 0;
+                foreach (var obj in list)
+                {
+                    if (obj is GameObject go && go != null && go.CompareTag(tag)) c++;
+                    else if (obj is Transform tr && tr != null && tr.CompareTag(tag)) c++;
+                    else if (obj is Component comp && comp != null && comp.CompareTag(tag)) c++;
+                }
+                return c;
+            }
+        }
+
+        // 2) Попробуем itemsRoot (Transform)
+        var rootField = t.GetField("itemsRoot", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        if (rootField != null)
+        {
+            object val = rootField.GetValue(inv);
+            if (val is Transform root && root != null)
+            {
+                int c = 0;
+                foreach (Transform child in root)
+                    if (child != null && child.CompareTag(tag)) c++;
+                return c;
+            }
+        }
+
+        Debug.LogWarning("Не смог найти список предметов в InventoryManager. " +
+                         "Добавь поле items (List<GameObject>) или itemsRoot (Transform), " +
+                         "чтобы квест кузнеца мог посчитать Ore.");
+        return 0;
+
+
+
+    }
+
+    private void RemoveInventoryItemsWithTag(InventoryManager inv, string tag, int amount)
+    {
+        if (inv == null) return;
+
+        var t = inv.GetType();
+
+        // 1) items (IList) — удаляем элементы из списка (как “8 штук”)
+        var itemsField = t.GetField("items", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        if (itemsField != null)
+        {
+            object val = itemsField.GetValue(inv);
+            if (val is IList list)
+            {
+                int left = amount;
+                for (int i = list.Count - 1; i >= 0 && left > 0; i--)
+                {
+                    var obj = list[i];
+
+                    GameObject go = null;
+                    if (obj is GameObject g) go = g;
+                    else if (obj is Transform tr) go = tr.gameObject;
+                    else if (obj is Component comp) go = comp.gameObject;
+
+                    if (go != null && go.CompareTag(tag))
+                    {
+                        list.RemoveAt(i);
+                        left--;
+                    }
+                }
+
+                // если в инвентаре есть метод Refresh/UpdateUI — попробуем вызвать
+                TryInvoke(inv, "Refresh");
+                TryInvoke(inv, "UpdateUI");
+                TryInvoke(inv, "Rebuild");
+                return;
+            }
+        }
+
+        // 2) itemsRoot — удаляем дочерние GameObject с нужным тегом
+        var rootField = t.GetField("itemsRoot", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        if (rootField != null)
+        {
+            object val = rootField.GetValue(inv);
+            if (val is Transform root && root != null)
+            {
+                int left = amount;
+                for (int i = root.childCount - 1; i >= 0 && left > 0; i--)
+                {
+                    var child = root.GetChild(i);
+                    if (child != null && child.CompareTag(tag))
+                    {
+                        Destroy(child.gameObject);
+                        left--;
+                    }
+                }
+                return;
+            }
+        }
+
+        Debug.LogWarning("Не смог удалить Ore из InventoryManager: не найдено items/itemsRoot.");
+    }
+
+    private void TryInvoke(object obj, string methodName)
+    {
+        var m = obj.GetType().GetMethod(methodName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        if (m != null) m.Invoke(obj, null);
     }
 }
